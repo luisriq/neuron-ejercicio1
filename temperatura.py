@@ -81,7 +81,7 @@ for t in celsius:
     velocidades, tiempo = generarVelocidades(diametros,t)
     print(velocidades, diametros)
     pyplot.plot(diametros, velocidades)
-    legend.append("{}ºC".format(t))
+    legend.append("{:.2f}ºC".format(t))
 
 pyplot.legend(legend)
 # Velocidad vs Diametro

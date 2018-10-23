@@ -17,9 +17,10 @@ axon.L = 10000
 stim = h.IClamp(axon(0))
 stim.delay = 50
 stim.dur = 1
-stim.amp = 2000
+stim.amp = 200
 
 # Primer grafico
+#pyplot.subplot(2, 1, 1)
 def graficar(x, y, color):
     pyplot.plot(x, y, color=color)
     #pyplot.ylim(-70, 70)
@@ -57,7 +58,6 @@ def calcularVelocidad(voltage, time, L):
 velocidades = []
 #   Diametros entre 10 y 100
 diametros = np.linspace(10, 100, 10)
-diametros = np.linspace(10, 1000, 100)
 cmap = pyplot.get_cmap('tab20')
 
 
@@ -77,15 +77,11 @@ for index, diam in enumerate(diametros):
     legends.append('$axon({:.2f}) | diam = {}$'.format(values[0], diam))
     legends.append('$axon({:.2f}) | diam = {}$'.format(values[1], diam))
     color = cmap(float(index)/len(diametros))
+    graficar(time_v, volt_v0, color)
+    graficar(time_v, volt_v1, color)
     velocidades.append(calcularVelocidad([volt_v0, volt_v1], time_v, axon.L))
 
-# Velocidad vs Diametro
-print(velocidades)
+pyplot.legend(legends, ncol=2)
 
-def graficarDiametro(x, y):
-    pyplot.plot(x, y)
-    pyplot.xlabel('diam (μm)')
-    pyplot.ylabel('vel (μm/ms)')
-graficarDiametro(diametros, velocidades)
 
 pyplot.show()
