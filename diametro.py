@@ -4,14 +4,14 @@ import numpy as np
 
 #Constantes
 #   Punto de corte para encontrar potencial de accion
-puntoDeCorte = -60
+puntoDeCorte = 0
 
 axon = h.Section(name='axon')
 axon.insert('hh')
 axon.nseg = 100
 axon.diam = 50
-axon.L = 10000
-
+axon.L = 50000
+axon.Ra = 15
 # IClamp al inicio (0)
 #   Delay = 50 para dar tiempo a inicializacion del resting potential
 stim = h.IClamp(axon(0))
@@ -45,12 +45,14 @@ def calcularTiempo(voltage, time):
     return None
 #   Se encuentra la velocidad entre 2 vectores de voltaje
 def calcularVelocidad(voltage, time, L):
-    
+    L = L/1000000
     t0 = calcularTiempo(voltage[0], time)
     t1 = calcularTiempo(voltage[1], time)
+    #diferencia de t en segundos
     if(t0 == None or t1 == None or (t1-t0 == 0)):
         return None
-    return L/(t1-t0)
+    tf = (t1-t0)/1000
+    return L/(tf)
 
 
 # Velocidades para cada diametro
@@ -73,7 +75,7 @@ for index, diam in enumerate(diametros):
 
     axon.diam = diam 
     h.run()
-    h.psection()
+    #h.psection()
     legends.append('$axon({:.2f}) | diam = {}$'.format(values[0], diam))
     legends.append('$axon({:.2f}) | diam = {}$'.format(values[1], diam))
     color = cmap(float(index)/len(diametros))
@@ -85,7 +87,7 @@ print(velocidades)
 def graficarDiametro(x, y):
     pyplot.plot(x, y)
     pyplot.xlabel('diam (μm)')
-    pyplot.ylabel('vel (μm/ms)')
+    pyplot.ylabel('vel (m/s)')
 graficarDiametro(diametros, velocidades)
 
 pyplot.show()
