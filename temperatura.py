@@ -1,6 +1,7 @@
-from matplotlib import pyplot
+# -*- coding: utf-8 -*-
 from neuron import h, gui
 import numpy as np
+from matplotlib import pyplot
 
 #Constantes
 #   Punto de corte para encontrar potencial de accion
@@ -10,14 +11,14 @@ axon = h.Section(name='axon')
 axon.insert('hh')
 axon.nseg = 100
 axon.diam = 50
-axon.L = 50000
+axon.L = 80000
 axon.Ra = 15
 # IClamp al inicio (0)
 #   Delay = 50 para dar tiempo a inicializacion del resting potential
 stim = h.IClamp(axon(0))
 stim.delay = 50
 stim.dur = 1
-stim.amp = 2000
+stim.amp = 5000
 
 # Correr Simulacion
 h.tstop = 100.0
@@ -83,11 +84,11 @@ for t in celsius:
     velocidades, tiempo = generarVelocidades(diametros,t)
     print(velocidades, diametros)
     pyplot.plot(diametros, velocidades)
-    legend.append("{:.2f}ºC".format(t))
+    legend.append("{:.2f} C".format(t))
 
 pyplot.legend(legend)
 # Velocidad vs Diametro
-pyplot.xlabel('diam (μm)')
-pyplot.ylabel('vel (m/s)')
+pyplot.xlabel(u'diam (µm)')
+pyplot.ylabel(u'vel (m/s)')
 
 pyplot.show()

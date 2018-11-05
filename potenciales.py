@@ -1,23 +1,25 @@
-from matplotlib import pyplot
+# -*- coding: utf-8 -*-
 from neuron import h, gui
 import numpy as np
+from matplotlib import pyplot
 
 #Constantes
 #   Punto de corte para encontrar potencial de accion
-puntoDeCorte = -60
+puntoDeCorte = 0
 
 axon = h.Section(name='axon')
 axon.insert('hh')
 axon.nseg = 100
 axon.diam = 50
-axon.L = 10000
+axon.L = 80000
+axon.Ra = 15
 
 # IClamp al inicio (0)
 #   Delay = 50 para dar tiempo a inicializacion del resting potential
 stim = h.IClamp(axon(0))
 stim.delay = 50
 stim.dur = 1
-stim.amp = 200
+stim.amp = 5000
 
 # Primer grafico
 #pyplot.subplot(2, 1, 1)
@@ -29,7 +31,7 @@ def graficar(x, y, color):
     pyplot.ylabel('mV')
 
 # Correr Simulacion
-h.tstop = 100.0
+h.tstop = 500.0
 values = [0.001,1]
 
 # Leyenda grafico
@@ -46,19 +48,22 @@ def calcularTiempo(voltage, time):
     return None
 #   Se encuentra la velocidad entre 2 vectores de voltaje
 def calcularVelocidad(voltage, time, L):
-    
+    L = L/1000000
     t0 = calcularTiempo(voltage[0], time)
     t1 = calcularTiempo(voltage[1], time)
+    #diferencia de t en segundos
     if(t0 == None or t1 == None or (t1-t0 == 0)):
         return None
-    return L/(t1-t0)
+    tf = (t1-t0)/1000
+    return L/(tf)
 
 
 # Velocidades para cada diametro
 velocidades = []
 #   Diametros entre 10 y 100
-diametros = np.linspace(10, 100, 10)
-cmap = pyplot.get_cmap('tab20')
+diametros = np.linspace(500, 1000, 10)
+#cmap = pyplot.get_cmap('Set1')
+cmap = pyplot.get_cmap('Paired')
 
 
 for index, diam in enumerate(diametros):
@@ -73,9 +78,9 @@ for index, diam in enumerate(diametros):
 
     axon.diam = diam 
     h.run()
-    h.psection()
-    legends.append('$axon({:.2f}) | diam = {}$'.format(values[0], diam))
-    legends.append('$axon({:.2f}) | diam = {}$'.format(values[1], diam))
+    #h.psection()
+    legends.append('$axon({:.2f}) | diam = {:.1f}$'.format(values[0], diam))
+    legends.append('$axon({:.2f}) | diam = {:.1f}$'.format(values[1], diam))
     color = cmap(float(index)/len(diametros))
     graficar(time_v, volt_v0, color)
     graficar(time_v, volt_v1, color)

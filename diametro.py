@@ -1,6 +1,7 @@
-from matplotlib import pyplot
+# -*- coding: utf-8 -*-
 from neuron import h, gui
 import numpy as np
+from matplotlib import pyplot
 
 #Constantes
 #   Punto de corte para encontrar potencial de accion
@@ -10,14 +11,14 @@ axon = h.Section(name='axon')
 axon.insert('hh')
 axon.nseg = 100
 axon.diam = 50
-axon.L = 50000
+axon.L = 80000
 axon.Ra = 15
 # IClamp al inicio (0)
 #   Delay = 50 para dar tiempo a inicializacion del resting potential
 stim = h.IClamp(axon(0))
 stim.delay = 50
 stim.dur = 1
-stim.amp = 2000
+stim.amp = 5000
 
 # Primer grafico
 def graficar(x, y, color):
@@ -60,7 +61,7 @@ velocidades = []
 #   Diametros entre 10 y 100
 diametros = np.linspace(10, 100, 10)
 diametros = np.linspace(10, 1000, 100)
-cmap = pyplot.get_cmap('tab20')
+#cmap = pyplot.get_cmap('tab20')
 
 
 for index, diam in enumerate(diametros):
@@ -78,16 +79,16 @@ for index, diam in enumerate(diametros):
     #h.psection()
     legends.append('$axon({:.2f}) | diam = {}$'.format(values[0], diam))
     legends.append('$axon({:.2f}) | diam = {}$'.format(values[1], diam))
-    color = cmap(float(index)/len(diametros))
+    #color = cmap(float(index)/len(diametros))
     velocidades.append(calcularVelocidad([volt_v0, volt_v1], time_v, axon.L))
 
 # Velocidad vs Diametro
-print(velocidades)
+#print(velocidades)
 
 def graficarDiametro(x, y):
     pyplot.plot(x, y)
-    pyplot.xlabel('diam (μm)')
-    pyplot.ylabel('vel (m/s)')
+    pyplot.xlabel(u'diam (µm)')
+    pyplot.ylabel(u'vel (m/s)')
 graficarDiametro(diametros, velocidades)
 
 pyplot.show()
